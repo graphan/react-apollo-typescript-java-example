@@ -1,0 +1,7 @@
+
+fragment FeedRepo on Repository {
+  name
+  owner {
+    ...FeedAuthor
+  }
+}

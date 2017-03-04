@@ -1,0 +1,11 @@
+
+query Feed {
+  feed (type: NEW, limit: 5) {
+    repository {
+      ...FeedRepo
+    }
+    postedBy {
+      ...FeedAuthor
+    }
+  }
+}

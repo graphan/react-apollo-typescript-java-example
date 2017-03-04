@@ -1,0 +1,4 @@
+
+fragment FeedAuthor on User {
+  login
+}
