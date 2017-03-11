@@ -6,13 +6,13 @@
 
 In vast majority of cases, both server-side and client-side use the same data model. The main difference is that data on the server and client side are respectively: statically and dynamically typed. The culprit is that REST APIs do not allow us to receive information about data types. We just receive data values.
 
- Harnessing such solutions as GraphQL and TypeScript, we can easily move static typings to the frontend world. The communication could be described as follows:
+ Harnessing such solutions as [GraphQL](http://graphql.org/) and [TypeScript](https://www.typescriptlang.org/), we can easily move static typings to the frontend world. The communication could be described as follows:
   - Java -> *GraphQLSchema* -> *TypeScript Interfaces* -> React
 
 where GraphQL Schema and TypeScript Interfaces would be generated automatically.
 
 Hence, the aim of this proof of concept is to demonstrate how to:
- - create a Java backend to expose GraphQL API (compatible with React Apollo)
+ - create a Java backend to expose GraphQL API (compatible with [React Apollo](http://dev.apollodata.com/react/))
  - automatically generate GraphQL Schema based on Java JPA Model
  - automatically generate TypeScript Interfaces based on GraphQL Schema
  - create the app consuming exposed GraphQL API
@@ -37,17 +37,16 @@ yarn install
 npm start
 ```
 
-Remember to run the server first.
-
-After running the app:
+If you want to launch the application, remember to run the above server first and then:
 - Open the client at http://localhost:3000
 
 #### How TypeScript Interfaces are generated?
 
 `npm start` invokes two scripts behind the scenes:
- - npm run update-schema
- - npm run generate-graphql-types
+ - `npm run update-schema`
 
- The first one downloads the GraphQL Schema from the server in JSON and save it in `client/schema/schema.json`.
+    It downloads the GraphQL Schema from the server in JSON and save it in `client/schema/schema.json`.
 
- The second one generates TypeScript Interfaces based on earlier downloaded GraphQL Schema and graphql files located at: `client/src/graphql` and save them in: `client/src/interfaces.ts`
+ - `npm run generate-graphql-types`
+
+    It generates TypeScript Interfaces based on earlier downloaded GraphQL Schema and graphql files located at: `client/src/graphql` and save them in: `client/src/interfaces.ts`
