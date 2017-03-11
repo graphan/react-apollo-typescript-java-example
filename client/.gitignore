@@ -7,3 +7,4 @@ node_modules
 schema/schema.json
 schema/error.json
 
+interfaces.ts
