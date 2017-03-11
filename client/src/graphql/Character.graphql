@@ -1,0 +1,10 @@
+fragment Character on Character {
+    id
+    name
+    appearsIn
+    friends {
+        id
+        name
+        appearsIn
+    }
+}

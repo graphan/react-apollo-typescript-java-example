@@ -1,0 +1,18 @@
+.characters {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.character {
+    padding: 35px 20px;
+    width: 400px;
+}
+
+ul {
+    margin: 5px;
+}
+
+button {
+    height: 40px;
+    cursor: pointer;
+}

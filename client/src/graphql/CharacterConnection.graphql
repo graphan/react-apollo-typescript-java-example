@@ -1,0 +1,12 @@
+#import "./Character.graphql"
+
+query characters($page: Int!) {
+    CharacterConnection (paginationRequest: { page: $page, size: 2 })
+    {
+        totalPages
+        content {
+            ...Character
+        },
+        currentPage
+    }
+}
