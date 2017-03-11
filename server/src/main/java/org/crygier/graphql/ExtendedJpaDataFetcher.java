@@ -14,11 +14,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.Iterator;
 
 public class ExtendedJpaDataFetcher extends JpaDataFetcher {
 
@@ -37,9 +35,11 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
         Optional<Field> totalElementsSelection = getSelectionField(field, "totalElements");
         Optional<Field> contentSelection = getSelectionField(field, "content");
+        Optional<Field> currentPageSelection = getSelectionField(field, "currentPage");
 
-        if (contentSelection.isPresent())
-            result.put("content", getQuery(environment, contentSelection.get()).setMaxResults(pageInformation.size).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList());
+        if (contentSelection.isPresent()) {
+            result.put("content", getPaginatedContent(environment, contentSelection.get(), pageInformation));
+        }
 
         if (totalElementsSelection.isPresent() || totalPagesSelection.isPresent()) {
             final Long totalElements = contentSelection
@@ -49,6 +49,10 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
 
             result.put("totalElements", totalElements);
             result.put("totalPages", ((Double) Math.ceil(totalElements / (double) pageInformation.size)).longValue());
+        }
+
+        if (currentPageSelection.isPresent()) {
+            result.put("currentPage", pageInformation.page);
         }
 
         return result;
@@ -71,19 +75,34 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         return field.getSelectionSet().getSelections().stream().filter(it -> it instanceof Field).map(it -> (Field) it).filter(it -> fieldName.equals(it.getName())).findFirst();
     }
 
+    private List<Object> getPaginatedContent(DataFetchingEnvironment environment, Field contentSelection, PageInformation pageInformation) {
+        List<Object> paginatedContent = getQuery(environment, contentSelection).setFirstResult((pageInformation.page - 1) * pageInformation.size).getResultList();
+
+        if (pageInformation.size <= paginatedContent.size()) paginatedContent = paginatedContent.subList(0, pageInformation.size);
+        else paginatedContent = paginatedContent.subList(0, paginatedContent.size());
+
+        return paginatedContent;
+    }
+
     private PageInformation extractPageInformation(DataFetchingEnvironment environment, Field field) {
-        Optional<Argument> paginationRequest = field.getArguments().stream().filter(it -> GraphQLSchemaBuilder.PAGINATION_REQUEST_PARAM_NAME.equals(it.getName())).findFirst();
-        if (paginationRequest.isPresent()) {
-            field.getArguments().remove(paginationRequest.get());
+        Integer page = 1;
+        Integer size = Integer.MAX_VALUE;
+        Iterator<Object> paginationRequest = environment.getArguments().values().iterator();
 
-            ObjectValue paginationValues = (ObjectValue) paginationRequest.get().getValue();
-            IntValue page = (IntValue) paginationValues.getObjectFields().stream().filter(it -> "page".equals(it.getName())).findFirst().get().getValue();
-            IntValue size = (IntValue) paginationValues.getObjectFields().stream().filter(it -> "size".equals(it.getName())).findFirst().get().getValue();
-
-            return new PageInformation(page.getValue().intValue(), size.getValue().intValue());
+        if(paginationRequest.hasNext()){
+            Iterator<Object> paginationArgs = ((HashMap) paginationRequest.next()).entrySet().iterator();
+            while(paginationArgs.hasNext()) {
+                Map.Entry<String, Integer> argument = (Map.Entry<String, Integer>) paginationArgs.next();
+                if(argument.getKey().equals("page")) {
+                    page = argument.getValue();
+                }
+                if(argument.getKey().equals("size")) {
+                    size = argument.getValue();
+                }
+            }
         }
 
-        return new PageInformation(1, Integer.MAX_VALUE);
+        return new PageInformation(page, size);
     }
 
     private static final class PageInformation {

@@ -63,6 +63,7 @@ public class GraphQLSchemaBuilder {
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("totalPages").description("Total number of pages calculated on the database for this pageSize.").type(Scalars.GraphQLLong).build())
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("totalElements").description("Total number of results on the database for this query.").type(Scalars.GraphQLLong).build())
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("content").description("The actual object results").type(new GraphQLList(getObjectType(entityType))).build())
+                .field(GraphQLFieldDefinition.newFieldDefinition().name("currentPage").description("The current page from a connection").type(Scalars.GraphQLInt).build())
                 .build();
 
         return GraphQLFieldDefinition.newFieldDefinition()
