@@ -21,7 +21,7 @@ Hence, the aim of this proof of concept is to demonstrate how to:
 
 ### 1. Server
 
-The server side part was taken from the awesome project: [graphql-jpa](https://github.com/jcrygier/graphql-jpa). Only some changes were needed to make it compatible with React Apollo. You just need to run the application located at: `server/src/test/groovy/org/crygier/graphql/TestApplication.groovy`
+The server side part was taken from the project: [graphql-jpa](https://github.com/jcrygier/graphql-jpa). Only some changes were needed to make it compatible with React Apollo. You just need to run the application located at: `server/src/test/groovy/org/crygier/graphql/TestApplication.groovy`
 
 GraphQL API will be exposed at: `http://localhost:8080/graphql`
 
