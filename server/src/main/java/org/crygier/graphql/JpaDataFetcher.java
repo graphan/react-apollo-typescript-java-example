@@ -36,7 +36,7 @@ public class JpaDataFetcher implements DataFetcher {
 
         // Loop through all of the fields being requested
         field.getSelectionSet().getSelections().forEach(selection -> {
-            if (selection instanceof Field) {
+            if (selection instanceof Field && !((Field) selection).getName().equals("__typename")) {
                 Field selectedField = (Field) selection;
                 Path fieldPath = root.get(selectedField.getName());
 

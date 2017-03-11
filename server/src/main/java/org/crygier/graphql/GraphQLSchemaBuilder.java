@@ -93,6 +93,7 @@ public class GraphQLSchemaBuilder {
                 .name(entityType.getName())
                 .description(getSchemaDocumentation( entityType.getJavaType()))
                 .fields(entityType.getAttributes().stream().map(this::getObjectField).collect(Collectors.toList()))
+                .field(GraphQLFieldDefinition.newFieldDefinition().name("__typename").description("Type of the field.").type(Scalars.GraphQLString).staticValue(entityType.getName()).build())
                 .build();
     }
 
