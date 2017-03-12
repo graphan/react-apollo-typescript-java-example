@@ -32,25 +32,7 @@ class GraphQlController {
     }
 
     private Map<String, Object> getVariablesAsMap(Object variables) {
-        Map<String,Object> variablesMap = new HashMap<>();
-
-        if (variables instanceof String) {
-            String variablesString = (String)variables;
-            variablesString = variablesString.substring(1, variablesString.length()-1);
-            String[] keyValuePairs = variablesString.split(",");
-
-            for(String pair : keyValuePairs)
-            {
-                String[] entry = pair.split(":");
-                String trimmedKey = entry[0].trim();
-                variablesMap.put(trimmedKey.substring(1, trimmedKey.length()-1), entry[1].trim());
-            }
-        }
-        else {
-            variablesMap = (Map<String,Object>)variables;
-        }
-
-        return variablesMap;
+        return variables instanceof String ? objectMapper.readValue(variables, Map.class) : (Map<String, Object>)variables;
     }
 
     private Map<String, Object> getTransformedResult(ExecutionResult executionResult) {
