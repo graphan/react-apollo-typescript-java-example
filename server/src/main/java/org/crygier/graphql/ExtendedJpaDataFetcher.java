@@ -17,6 +17,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class ExtendedJpaDataFetcher extends JpaDataFetcher {
 
@@ -29,7 +30,7 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         Field field = environment.getFields().iterator().next();
         Map<String, Object> result = new LinkedHashMap<>();
 
-        PageInformation pageInformation = extractPageInformation(environment, field);
+        PageInformation pageInformation = extractPageInformation(environment);
 
         // See which fields we're requesting
         Optional<Field> totalPagesSelection = getSelectionField(field, "totalPages");
@@ -84,23 +85,11 @@ public class ExtendedJpaDataFetcher extends JpaDataFetcher {
         return paginatedContent;
     }
 
-    private PageInformation extractPageInformation(DataFetchingEnvironment environment, Field field) {
-        Integer page = 1;
-        Integer size = Integer.MAX_VALUE;
-        Iterator<Object> paginationRequest = environment.getArguments().values().iterator();
+    private PageInformation extractPageInformation(DataFetchingEnvironment environment) {
+        Map<String, Integer> paginationRequestAsMap = (LinkedHashMap)environment.getArguments().get("paginationRequest");
 
-        if(paginationRequest.hasNext()){
-            Iterator<Object> paginationArgs = ((HashMap) paginationRequest.next()).entrySet().iterator();
-            while(paginationArgs.hasNext()) {
-                Map.Entry<String, Integer> argument = (Map.Entry<String, Integer>) paginationArgs.next();
-                if(argument.getKey().equals("page")) {
-                    page = argument.getValue();
-                }
-                if(argument.getKey().equals("size")) {
-                    size = argument.getValue();
-                }
-            }
-        }
+        Integer page = paginationRequestAsMap.containsKey("page") ? paginationRequestAsMap.get("page") : 1;
+        Integer size = paginationRequestAsMap.containsKey("size") ? paginationRequestAsMap.get("size") : Integer.MAX_VALUE;
 
         return new PageInformation(page, size);
     }
