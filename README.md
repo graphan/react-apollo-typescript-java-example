@@ -9,12 +9,12 @@ In vast majority of cases, both server-side and client-side use the same data mo
  Harnessing such solutions as [GraphQL](http://graphql.org/) and [TypeScript](https://www.typescriptlang.org/), we can easily move static typings to the frontend world. The communication could be described as follows:
   - Java -> *GraphQLSchema* -> *TypeScript Interfaces* -> React
 
-where GraphQL Schema and TypeScript Interfaces would be generated automatically.
+where GraphQL Schema and TypeScript Interfaces are generated automatically.
 
 Hence, the aim of this proof of concept is to demonstrate how to:
- - create a Java backend to expose GraphQL API (compatible with [React Apollo](http://dev.apollodata.com/react/))
- - automatically generate GraphQL Schema based on Java JPA Model
- - automatically generate TypeScript Interfaces based on GraphQL Schema
+ - expose GraphQL API in Java (compatible with [React Apollo](http://dev.apollodata.com/react/))
+ - generate GraphQL Schema based on Java JPA Model
+ - generate TypeScript Interfaces based on GraphQL Schema
  - create the app consuming exposed GraphQL API
 
 ## Running the app
