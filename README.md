@@ -1,10 +1,10 @@
 # Proof of concept: React Apollo TypeScript Java
 
-> Use static types in the frontend world easily!
+> Use static typings in the frontend world easily!
 
 ## Concept
 
-In vast majority of cases, both server-side and client-side use the same data model. The main difference is that data on the server and client side are respectively: statically and dynamically typed. The culprit is that REST APIs do not allow us to receive information about data types. We just receive data values.
+In vast majority of cases, both server-side and client-side use the same data model. The main difference is that data on the server and client side are respectively: statically and dynamically typed. The culprit is that REST APIs do not allow us to send information about data types by default. We just receive data values.
 
  Harnessing such solutions as [GraphQL](http://graphql.org/) and [TypeScript](https://www.typescriptlang.org/), we can easily move static typings to the frontend world. The communication could be described as follows:
   - Java -> *GraphQLSchema* -> *TypeScript Interfaces* -> React
